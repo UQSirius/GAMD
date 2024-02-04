@@ -34,7 +34,6 @@ NUM_OF_ATOMS = 258
 LAMBDA1 = 100.
 LAMBDA2 = 1e-3
 
-
 def get_rotation_matrix():
     """ Randomly rotate the point clouds to augument the dataset
         rotation is per shape based along up direction
@@ -371,14 +370,15 @@ def train_model(args):
     epoch_end_callback = ModelCheckpointAtEpochEnd(filepath=model_check_point_dir, save_step_frequency=5)
     checkpoint_callback = pl.callbacks.ModelCheckpoint()
 
-    trainer = Trainer(gpus=num_gpu,
+    trainer = Trainer(#gpus=1,
                       callbacks=[epoch_end_callback, checkpoint_callback],
                       min_epochs=min_epoch,
                       max_epochs=max_epoch,
-                      amp_backend='apex',
-                      amp_level='O1',
+                      #amp_backend='apex',
+                      #amp_level='O1',
+                      precision=32,
                       benchmark=True,
-                      distributed_backend='ddp',
+                      strategy='ddp',
                       )
     trainer.fit(model)
 
@@ -397,9 +397,9 @@ def main():
     parser.add_argument('--drop_edge', action='store_true')
     parser.add_argument('--use_layer_norm', action='store_true')
     parser.add_argument('--disable_rotate_aug', dest='rotate_aug', default=True, action='store_false')
-    parser.add_argument('--data_dir', default='./md_dataset')
+    parser.add_argument('--data_dir', default='../../dataset')
     parser.add_argument('--loss', default='mae')
-    parser.add_argument('--num_gpu', default=-1, type=int)
+    parser.add_argument('--num_gpu', default=1, type=int)
     args = parser.parse_args()
     train_model(args)
 

@@ -102,7 +102,7 @@ for seed in range(10):
         vel = state.getVelocities(asNumpy=True).value_in_unit(unit.meter / unit.second)
         force = state.getForces(asNumpy=True).value_in_unit(unit.kilojoules_per_mole/unit.nanometer)
 
-        np.savez(f'./water_data_tip3p/data_{seed}_{t}.npz',
+        np.savez(f'../md_dataset/water_data_tip3p/data_{seed}_{t}.npz',
                  pos=pos,
                  vel=vel,
                  forces=force)
